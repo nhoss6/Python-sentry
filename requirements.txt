@@ -1,0 +1,6 @@
+flask
+flask-cors
+flask-restx
+mysql-connector-python
+python-dotenv
+sentry-sdk
