@@ -273,6 +273,7 @@
   <nav>
     <div class="container">
       <a href="#objectif">Objectif</a>
+      <a href="#deroule-detaille">Déroulé détaillé</a>
       <a href="#architecture">Architecture</a>
       <a href="#github-app">GitHub App Sentry</a>
       <a href="#repo">Dépôt GitHub</a>
@@ -305,8 +306,460 @@
       </div>
     </section>
 
+    <section id="deroule-detaille">
+      <h2>2. Déroulé ultra détaillé, pas à pas</h2>
+
+      <p>
+        Cette section est pensée comme un script de formation. Tu peux la suivre à l’écran,
+        étape par étape, pendant que les élèves reproduisent la manipulation.
+      </p>
+
+      <div class="callout success">
+        <strong>Fil rouge à annoncer :</strong>
+        “On part d’une application Python Flask. On provoque une erreur volontaire.
+        Sentry la détecte. Ensuite, on transforme cette erreur en ticket GitHub pour organiser la correction.”
+      </div>
+
+      <h3>Étape 0 — Présenter le problème aux élèves</h3>
+      <div class="step">
+        <div class="num">0</div>
+        <div class="step-content">
+          <p><strong>Objectif pédagogique :</strong> expliquer pourquoi Sentry et GitHub Issues sont utiles.</p>
+          <p>
+            Avant de toucher au code, expliquer que dans une vraie équipe, une erreur ne doit pas rester
+            seulement dans le terminal d’un développeur. Elle doit être visible, traçable, partagée,
+            puis suivie jusqu’à sa correction.
+          </p>
+          <p><strong>Phrase à dire :</strong></p>
+          <pre><code>Quand une application plante, le vrai sujet n'est pas seulement l'erreur.
+Le vrai sujet, c'est : comment l'équipe la voit, la comprend, la priorise et la corrige.</code></pre>
+        </div>
+      </div>
+
+      <h3>Étape 1 — Ouvrir le dépôt GitHub de démonstration</h3>
+      <div class="step">
+        <div class="num">1</div>
+        <div class="step-content">
+          <p><strong>Où aller :</strong></p>
+          <pre><code>https://github.com/nhoss6/Python-sentry</code></pre>
+          <p><strong>Ce que les élèves doivent voir :</strong></p>
+          <ul>
+            <li>un dépôt GitHub nommé <code>Python-sentry</code> ;</li>
+            <li>des fichiers Python comme <code>app.py</code> et <code>sentry_demo.py</code> ;</li>
+            <li>un fichier <code>.env.example</code> ;</li>
+            <li>un dossier <code>.github/ISSUE_TEMPLATE</code>.</li>
+          </ul>
+          <p><strong>Explication :</strong></p>
+          <p>
+            Le dépôt contient le code de l’application et la documentation nécessaire pour refaire la démonstration.
+            Le dépôt ne contient pas le vrai DSN Sentry, car un secret ne doit jamais être versionné.
+          </p>
+        </div>
+      </div>
+
+      <h3>Étape 2 — Comprendre les fichiers importants</h3>
+      <div class="step">
+        <div class="num">2</div>
+        <div class="step-content">
+          <table>
+            <thead>
+              <tr>
+                <th>Fichier</th>
+                <th>Explication simple</th>
+                <th>Ce qu’il faut dire aux élèves</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><code>app.py</code></td>
+                <td>Application Flask principale.</td>
+                <td>“C’est l’application qui va générer l’erreur et parler avec Sentry.”</td>
+              </tr>
+              <tr>
+                <td><code>sentry_demo.py</code></td>
+                <td>Script autonome pour tester Sentry sans lancer toute l’API.</td>
+                <td>“C’est une version courte pour comprendre le principe.”</td>
+              </tr>
+              <tr>
+                <td><code>.env.example</code></td>
+                <td>Modèle de configuration sans secret.</td>
+                <td>“On montre les variables attendues, mais jamais les vraies valeurs sensibles.”</td>
+              </tr>
+              <tr>
+                <td><code>.gitignore</code></td>
+                <td>Empêche d’envoyer <code>.env</code>, <code>.venv</code> et les caches sur GitHub.</td>
+                <td>“Ce fichier protège le projet contre les commits accidentels.”</td>
+              </tr>
+              <tr>
+                <td><code>requirements.txt</code></td>
+                <td>Liste des dépendances Python.</td>
+                <td>“C’est la liste des bibliothèques à installer.”</td>
+              </tr>
+              <tr>
+                <td><code>bug_sentry.md</code></td>
+                <td>Template d’issue GitHub pour documenter une erreur Sentry.</td>
+                <td>“On standardise la manière de décrire les bugs.”</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <h3>Étape 3 — Ouvrir le projet local dans le bon dossier</h3>
+      <div class="step">
+        <div class="num">3</div>
+        <div class="step-content">
+          <p><strong>Dossier local utilisé :</strong></p>
+          <pre><code>C:\Users\moham\OneDrive\Desktop\Qadow\app\Python-sentry-worktree</code></pre>
+          <p><strong>Commande PowerShell :</strong></p>
+          <pre><code>cd "C:\Users\moham\OneDrive\Desktop\Qadow\app\Python-sentry-worktree"</code></pre>
+          <p><strong>Pourquoi c’est important :</strong></p>
+          <p>
+            Toutes les commandes suivantes doivent être lancées depuis ce dossier.
+            Sinon, Python risque de ne pas trouver <code>app.py</code>, <code>requirements.txt</code> ou <code>.env</code>.
+          </p>
+        </div>
+      </div>
+
+      <h3>Étape 4 — Créer un environnement virtuel Python</h3>
+      <div class="step">
+        <div class="num">4</div>
+        <div class="step-content">
+          <p><strong>Commande :</strong></p>
+          <pre><code>python -m venv .venv</code></pre>
+          <p><strong>Explication :</strong></p>
+          <p>
+            L’environnement virtuel isole les dépendances du projet.
+            Cela évite de mélanger les bibliothèques de ce cours avec celles d’autres projets Python.
+          </p>
+          <p><strong>Ce que les élèves doivent voir :</strong></p>
+          <ul>
+            <li>un nouveau dossier <code>.venv</code> dans le projet ;</li>
+            <li>aucune erreur dans le terminal.</li>
+          </ul>
+          <div class="callout warning">
+            <strong>Si la commande ne marche pas :</strong> vérifier que Python est installé et disponible avec
+            <code>python --version</code>.
+          </div>
+        </div>
+      </div>
+
+      <h3>Étape 5 — Activer l’environnement virtuel</h3>
+      <div class="step">
+        <div class="num">5</div>
+        <div class="step-content">
+          <p><strong>Commande PowerShell :</strong></p>
+          <pre><code>.venv\Scripts\Activate.ps1</code></pre>
+          <p><strong>Ce que les élèves doivent voir :</strong></p>
+          <p>
+            Le terminal doit afficher <code>(.venv)</code> au début de la ligne.
+          </p>
+          <p><strong>Phrase à dire :</strong></p>
+          <pre><code>Quand vous voyez (.venv), cela veut dire que les installations Python vont se faire dans le projet, pas globalement sur la machine.</code></pre>
+          <div class="callout warning">
+            <strong>Si PowerShell bloque l’activation :</strong>
+            l’exécution des scripts peut être restreinte. Pour un cours, l’enseignant peut préparer l’environnement
+            à l’avance ou expliquer la politique d’exécution PowerShell.
+          </div>
+        </div>
+      </div>
+
+      <h3>Étape 6 — Installer les dépendances</h3>
+      <div class="step">
+        <div class="num">6</div>
+        <div class="step-content">
+          <p><strong>Commande :</strong></p>
+          <pre><code>pip install -r requirements.txt</code></pre>
+          <p><strong>Bibliothèques importantes :</strong></p>
+          <ul>
+            <li><code>flask</code> : framework web Python ;</li>
+            <li><code>flask-restx</code> : Swagger et API REST ;</li>
+            <li><code>sentry-sdk</code> : SDK officiel Sentry ;</li>
+            <li><code>python-dotenv</code> : lecture du fichier <code>.env</code> ;</li>
+            <li><code>mysql-connector-python</code> : connexion MySQL.</li>
+          </ul>
+          <p><strong>Ce que les élèves doivent comprendre :</strong></p>
+          <p>
+            Le code Python importe ces bibliothèques. Si elles ne sont pas installées,
+            l’application ne peut pas démarrer.
+          </p>
+        </div>
+      </div>
+
+      <h3>Étape 7 — Créer le fichier .env local</h3>
+      <div class="step">
+        <div class="num">7</div>
+        <div class="step-content">
+          <p><strong>Commande :</strong></p>
+          <pre><code>copy .env.example .env</code></pre>
+          <p><strong>Contenu attendu dans <code>.env</code> :</strong></p>
+          <pre><code>SENTRY_DSN=votre_dsn_sentry
+ENVIRONMENT=development
+APP_RELEASE=api-python-mysql-swagger@1.0.0
+SENTRY_TRACES_SAMPLE_RATE=0.0</code></pre>
+          <p><strong>Explication variable par variable :</strong></p>
+          <table>
+            <thead>
+              <tr>
+                <th>Variable</th>
+                <th>Rôle</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><code>SENTRY_DSN</code></td>
+                <td>Adresse technique qui dit au SDK Sentry où envoyer les erreurs.</td>
+              </tr>
+              <tr>
+                <td><code>ENVIRONMENT</code></td>
+                <td>Nom de l’environnement : <code>development</code>, <code>staging</code>, <code>production</code>.</td>
+              </tr>
+              <tr>
+                <td><code>APP_RELEASE</code></td>
+                <td>Version de l’application visible dans Sentry.</td>
+              </tr>
+              <tr>
+                <td><code>SENTRY_TRACES_SAMPLE_RATE</code></td>
+                <td>Taux de tracing. Pour cette démo, <code>0.0</code> suffit.</td>
+              </tr>
+            </tbody>
+          </table>
+          <div class="callout danger">
+            <strong>Règle absolue :</strong> ne jamais commiter le fichier <code>.env</code>.
+            Il contient le vrai DSN Sentry.
+          </div>
+        </div>
+      </div>
+
+      <h3>Étape 8 — Montrer le code d’initialisation Sentry</h3>
+      <div class="step">
+        <div class="num">8</div>
+        <div class="step-content">
+          <p><strong>Fichier à ouvrir :</strong> <code>app.py</code></p>
+          <p><strong>Code à expliquer :</strong></p>
+          <pre><code>load_dotenv()
+
+sentry_dsn = os.getenv("SENTRY_DSN")
+if sentry_dsn:
+    sentry_sdk.init(
+        dsn=sentry_dsn,
+        integrations=[FlaskIntegration()],
+        environment=os.getenv("ENVIRONMENT", "development"),
+        release=os.getenv("APP_RELEASE", "api-python-mysql-swagger@1.0.0"),
+        send_default_pii=False,
+        traces_sample_rate=float(os.getenv("SENTRY_TRACES_SAMPLE_RATE", "0.0")),
+    )</code></pre>
+          <p><strong>Explication ligne par ligne :</strong></p>
+          <ul>
+            <li><code>load_dotenv()</code> charge les variables du fichier <code>.env</code>.</li>
+            <li><code>os.getenv("SENTRY_DSN")</code> lit le DSN sans l’écrire dans le code.</li>
+            <li><code>if sentry_dsn:</code> évite de planter si le DSN n’est pas encore configuré.</li>
+            <li><code>FlaskIntegration()</code> connecte Sentry à Flask.</li>
+            <li><code>environment</code> permet de savoir si l’erreur vient de dev ou prod.</li>
+            <li><code>release</code> permet de relier une erreur à une version du code.</li>
+            <li><code>send_default_pii=False</code> limite l’envoi de données personnelles.</li>
+          </ul>
+        </div>
+      </div>
+
+      <h3>Étape 9 — Montrer la route qui provoque l’erreur</h3>
+      <div class="step">
+        <div class="num">9</div>
+        <div class="step-content">
+          <p><strong>Route :</strong></p>
+          <pre><code>http://127.0.0.1:5000/debug-sentry</code></pre>
+          <p><strong>Code correspondant :</strong></p>
+          <pre><code>@app.route("/debug-sentry")
+def trigger_error():
+    if os.getenv("ENVIRONMENT", "development") != "development":
+        return {
+            "error": "Route de demonstration desactivee hors environnement development"
+        }, 403
+
+    raise RuntimeError("Erreur volontaire pour demonstration Sentry + GitHub Issues")</code></pre>
+          <p><strong>Explication :</strong></p>
+          <p>
+            Cette route est volontairement dangereuse, mais seulement en environnement <code>development</code>.
+            Elle sert à générer une exception contrôlée pour vérifier que Sentry fonctionne.
+          </p>
+          <div class="callout warning">
+            <strong>À dire :</strong> cette route ne doit pas rester accessible en production.
+            Elle est ici pour la démonstration.
+          </div>
+        </div>
+      </div>
+
+      <h3>Étape 10 — Lancer l’application Flask</h3>
+      <div class="step">
+        <div class="num">10</div>
+        <div class="step-content">
+          <p><strong>Commande :</strong></p>
+          <pre><code>python app.py</code></pre>
+          <p><strong>Résultat attendu dans le terminal :</strong></p>
+          <pre><code>* Serving Flask app 'app'
+* Debug mode: on
+* Running on http://127.0.0.1:5000</code></pre>
+          <p><strong>Explication :</strong></p>
+          <p>
+            Flask démarre un serveur local. L’application n’est pas encore en production ;
+            elle tourne uniquement sur la machine du formateur ou de l’élève.
+          </p>
+        </div>
+      </div>
+
+      <h3>Étape 11 — Ouvrir Swagger</h3>
+      <div class="step">
+        <div class="num">11</div>
+        <div class="step-content">
+          <p><strong>URL :</strong></p>
+          <pre><code>http://127.0.0.1:5000/swagger</code></pre>
+          <p><strong>Ce que les élèves doivent voir :</strong></p>
+          <ul>
+            <li>la documentation Swagger ;</li>
+            <li>les routes <code>/products</code> ;</li>
+            <li>les méthodes <code>GET</code>, <code>POST</code>, <code>PUT</code>, <code>DELETE</code>.</li>
+          </ul>
+          <p><strong>Phrase à dire :</strong></p>
+          <pre><code>Swagger documente notre API. Sentry, lui, surveille ce qui se passe quand l'API casse.</code></pre>
+        </div>
+      </div>
+
+      <h3>Étape 12 — Déclencher l’erreur volontaire</h3>
+      <div class="step">
+        <div class="num">12</div>
+        <div class="step-content">
+          <p><strong>URL :</strong></p>
+          <pre><code>http://127.0.0.1:5000/debug-sentry</code></pre>
+          <p><strong>Résultat attendu côté navigateur :</strong></p>
+          <ul>
+            <li>une erreur <code>500 Internal Server Error</code> ;</li>
+            <li>une exception <code>RuntimeError</code> ;</li>
+            <li>le message <code>Erreur volontaire pour demonstration Sentry + GitHub Issues</code>.</li>
+          </ul>
+          <p><strong>Résultat attendu côté terminal :</strong></p>
+          <p>
+            Flask affiche la stack trace. C’est normal : on vient volontairement de casser la route.
+          </p>
+          <p><strong>Phrase à dire :</strong></p>
+          <pre><code>Cette erreur est volontaire. On ne teste pas si l'application est parfaite, on teste si notre système de surveillance voit bien l'erreur.</code></pre>
+        </div>
+      </div>
+
+      <h3>Étape 13 — Vérifier dans Sentry</h3>
+      <div class="step">
+        <div class="num">13</div>
+        <div class="step-content">
+          <p><strong>Où aller :</strong></p>
+          <pre><code>https://perso-6v.sentry.io/issues/</code></pre>
+          <p><strong>Ce qu’il faut chercher :</strong></p>
+          <ul>
+            <li>un événement récent ;</li>
+            <li>le type <code>RuntimeError</code> ;</li>
+            <li>le message de démonstration ;</li>
+            <li>la stack trace pointant vers <code>trigger_error</code> dans <code>app.py</code>.</li>
+          </ul>
+          <p><strong>Explication :</strong></p>
+          <p>
+            Sentry centralise l’erreur. Même si l’utilisateur ne sait pas expliquer ce qui s’est passé,
+            l’équipe technique reçoit le contexte nécessaire pour comprendre.
+          </p>
+        </div>
+      </div>
+
+      <h3>Étape 14 — Créer une GitHub Issue depuis Sentry</h3>
+      <div class="step">
+        <div class="num">14</div>
+        <div class="step-content">
+          <p><strong>Dans Sentry :</strong></p>
+          <ol>
+            <li>ouvrir l’événement ;</li>
+            <li>chercher le bouton ou menu <code>Create GitHub Issue</code> ;</li>
+            <li>choisir le dépôt <code>nhoss6/Python-sentry</code> ;</li>
+            <li>renseigner le titre ;</li>
+            <li>vérifier la description ;</li>
+            <li>cliquer sur le bouton de création.</li>
+          </ol>
+          <p><strong>Ce que les élèves doivent comprendre :</strong></p>
+          <p>
+            On ne copie-colle pas simplement une erreur dans un ticket. Sentry peut lier l’événement au ticket,
+            ce qui permet de naviguer entre le diagnostic technique et le suivi projet.
+          </p>
+        </div>
+      </div>
+
+      <h3>Étape 15 — Vérifier l’issue dans GitHub</h3>
+      <div class="step">
+        <div class="num">15</div>
+        <div class="step-content">
+          <p><strong>Où aller :</strong></p>
+          <pre><code>https://github.com/nhoss6/Python-sentry/issues</code></pre>
+          <p><strong>Ce qu’il faut vérifier :</strong></p>
+          <ul>
+            <li>l’issue existe ;</li>
+            <li>le titre est clair ;</li>
+            <li>la description contient le contexte ;</li>
+            <li>le lien vers Sentry est présent si Sentry l’a ajouté ;</li>
+            <li>les labels permettent d’identifier le type de ticket.</li>
+          </ul>
+          <p><strong>Phrase à dire :</strong></p>
+          <pre><code>À partir de maintenant, le bug n'est plus seulement une erreur technique. C'est un élément de travail visible par l'équipe.</code></pre>
+        </div>
+      </div>
+
+      <h3>Étape 16 — Expliquer les issues déjà créées</h3>
+      <div class="step">
+        <div class="num">16</div>
+        <div class="step-content">
+          <p>
+            Dans le dépôt, trois issues pédagogiques existent déjà :
+          </p>
+          <ul>
+            <li><strong>#1</strong> : connecter le projet Flask à Sentry ;</li>
+            <li><strong>#2</strong> : provoquer une erreur volontaire ;</li>
+            <li><strong>#3</strong> : créer une GitHub Issue depuis Sentry.</li>
+          </ul>
+          <p>
+            Elles peuvent servir de support pour découper le TP en petites tâches.
+          </p>
+        </div>
+      </div>
+
+      <h3>Étape 17 — Expliquer la sécurité des permissions GitHub</h3>
+      <div class="step">
+        <div class="num">17</div>
+        <div class="step-content">
+          <p><strong>Page :</strong></p>
+          <pre><code>https://github.com/settings/installations/142130303</code></pre>
+          <p><strong>Configuration choisie :</strong></p>
+          <ul>
+            <li><code>Only select repositories</code> est activé ;</li>
+            <li><code>Python-Avanc-e-</code> est autorisé ;</li>
+            <li><code>Python-sentry</code> est autorisé ;</li>
+            <li>Sentry n’a pas accès à tous les dépôts du compte.</li>
+          </ul>
+          <p><strong>Phrase à dire :</strong></p>
+          <pre><code>En DevOps, connecter des outils ne veut pas dire tout autoriser. On donne uniquement les permissions nécessaires.</code></pre>
+        </div>
+      </div>
+
+      <h3>Étape 18 — Résumer le workflow complet</h3>
+      <div class="step">
+        <div class="num">18</div>
+        <div class="step-content">
+          <pre><code>1. Le développeur lance Flask.
+2. L'utilisateur ou le test appelle une route.
+3. Une exception Python est levée.
+4. Le SDK Sentry capture l'exception.
+5. Sentry affiche l'erreur, la stack trace et le contexte.
+6. Depuis Sentry, on crée une GitHub Issue.
+7. L'équipe suit la correction dans GitHub.
+8. Une branche et une pull request peuvent corriger le problème.</code></pre>
+        </div>
+      </div>
+    </section>
+
     <section id="architecture">
-      <h2>2. Architecture expliquée simplement</h2>
+      <h2>3. Architecture expliquée simplement</h2>
       <div class="grid">
         <div class="box">
           <h3>Application Python</h3>
@@ -340,7 +793,7 @@ Ticket dans nhoss6/Python-sentry</code></pre>
     </section>
 
     <section id="github-app">
-      <h2>3. Connexion GitHub App Sentry</h2>
+      <h2>4. Connexion GitHub App Sentry</h2>
 
       <div class="step">
         <div class="num">1</div>
@@ -399,7 +852,7 @@ Ticket dans nhoss6/Python-sentry</code></pre>
     </section>
 
     <section id="repo">
-      <h2>4. Dépôt GitHub utilisé pour la démonstration</h2>
+      <h2>5. Dépôt GitHub utilisé pour la démonstration</h2>
       <p>
         Le dépôt final utilisé pour la démo est :
       </p>
@@ -444,7 +897,7 @@ Ticket dans nhoss6/Python-sentry</code></pre>
     </section>
 
     <section id="code">
-      <h2>5. Code Python : initialiser Sentry proprement</h2>
+      <h2>6. Code Python : initialiser Sentry proprement</h2>
       <p>
         Dans <code>app.py</code>, Sentry est initialisé uniquement si <code>SENTRY_DSN</code> existe.
       </p>
@@ -483,7 +936,7 @@ def trigger_error():
     </section>
 
     <section id="env">
-      <h2>6. Configuration locale avec .env</h2>
+      <h2>7. Configuration locale avec .env</h2>
       <p>
         Le fichier <code>.env.example</code> sert de modèle :
       </p>
@@ -506,7 +959,7 @@ SENTRY_TRACES_SAMPLE_RATE=0.0</code></pre>
     </section>
 
     <section id="installation">
-      <h2>7. Installation du projet</h2>
+      <h2>8. Installation du projet</h2>
 
       <h3>Créer l’environnement virtuel</h3>
       <pre><code>python -m venv .venv</code></pre>
@@ -522,7 +975,7 @@ SENTRY_TRACES_SAMPLE_RATE=0.0</code></pre>
     </section>
 
     <section id="test">
-      <h2>8. Tester l’erreur volontaire</h2>
+      <h2>9. Tester l’erreur volontaire</h2>
       <p>
         Une fois le serveur lancé, ouvrir :
       </p>
@@ -550,7 +1003,7 @@ SENTRY_TRACES_SAMPLE_RATE=0.0</code></pre>
     </section>
 
     <section id="issues">
-      <h2>9. GitHub Issues créées dans le dépôt</h2>
+      <h2>10. GitHub Issues créées dans le dépôt</h2>
       <p>
         Trois issues pédagogiques ont été créées dans le dépôt :
       </p>
@@ -585,7 +1038,7 @@ SENTRY_TRACES_SAMPLE_RATE=0.0</code></pre>
     </section>
 
     <section id="chemins">
-      <h2>10. Chemins et liens utilisés pendant la démonstration</h2>
+      <h2>11. Chemins et liens utilisés pendant la démonstration</h2>
 
       <p>
         Cette partie permet aux élèves de comprendre où se trouvent les fichiers localement,
@@ -716,7 +1169,7 @@ python app.py</code></pre>
     </section>
 
     <section id="discours">
-      <h2>11. Script d’explication pour les élèves</h2>
+      <h2>12. Script d’explication pour les élèves</h2>
 
       <div class="box">
         <h3>Phrase d’introduction</h3>
@@ -753,7 +1206,7 @@ python app.py</code></pre>
     </section>
 
     <section id="recap">
-      <h2>12. Récapitulatif final</h2>
+      <h2>13. Récapitulatif final</h2>
       <table>
         <thead>
           <tr>
