@@ -1,0 +1,666 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Cours pas à pas - Sentry + GitHub Issues avec Python Flask</title>
+  <style>
+    :root {
+      --bg: #0f172a;
+      --panel: #111827;
+      --card: #ffffff;
+      --text: #1f2937;
+      --muted: #6b7280;
+      --brand: #6f42c1;
+      --brand-dark: #4c1d95;
+      --green: #16a34a;
+      --orange: #f97316;
+      --red: #dc2626;
+      --line: #e5e7eb;
+      --code: #0b1020;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: Arial, Helvetica, sans-serif;
+      line-height: 1.6;
+      color: var(--text);
+      background: #f3f4f6;
+    }
+
+    header {
+      background: linear-gradient(135deg, var(--bg), var(--brand-dark));
+      color: white;
+      padding: 48px 24px;
+    }
+
+    header .container {
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+
+    header h1 {
+      margin: 0 0 12px;
+      font-size: clamp(2rem, 5vw, 4rem);
+      line-height: 1.1;
+    }
+
+    header p {
+      max-width: 820px;
+      margin: 0;
+      color: #d1d5db;
+      font-size: 1.15rem;
+    }
+
+    nav {
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      background: white;
+      border-bottom: 1px solid var(--line);
+      overflow-x: auto;
+      white-space: nowrap;
+    }
+
+    nav .container {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 10px 24px;
+    }
+
+    nav a {
+      display: inline-block;
+      margin-right: 16px;
+      color: var(--brand-dark);
+      text-decoration: none;
+      font-weight: 700;
+      font-size: 0.92rem;
+    }
+
+    main {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 28px 24px 64px;
+    }
+
+    section {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      padding: 28px;
+      margin: 0 0 22px;
+      box-shadow: 0 10px 30px rgba(15, 23, 42, 0.06);
+    }
+
+    h2 {
+      margin: 0 0 18px;
+      color: #111827;
+      font-size: 1.8rem;
+    }
+
+    h3 {
+      margin: 24px 0 10px;
+      color: #111827;
+      font-size: 1.22rem;
+    }
+
+    p {
+      margin: 10px 0;
+    }
+
+    ul,
+    ol {
+      padding-left: 24px;
+    }
+
+    li {
+      margin: 8px 0;
+    }
+
+    code {
+      background: #eef2ff;
+      color: #312e81;
+      padding: 2px 6px;
+      border-radius: 6px;
+      font-family: Consolas, Monaco, monospace;
+      font-size: 0.95em;
+    }
+
+    pre {
+      background: var(--code);
+      color: #e5e7eb;
+      padding: 18px;
+      border-radius: 14px;
+      overflow-x: auto;
+      line-height: 1.5;
+    }
+
+    pre code {
+      background: transparent;
+      color: inherit;
+      padding: 0;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 16px;
+    }
+
+    .box {
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      padding: 18px;
+      background: #f9fafb;
+    }
+
+    .box h3 {
+      margin-top: 0;
+    }
+
+    .badge {
+      display: inline-block;
+      padding: 4px 10px;
+      border-radius: 999px;
+      font-size: 0.78rem;
+      font-weight: 700;
+      color: white;
+      background: var(--brand);
+    }
+
+    .success {
+      border-left: 6px solid var(--green);
+      background: #f0fdf4;
+    }
+
+    .warning {
+      border-left: 6px solid var(--orange);
+      background: #fff7ed;
+    }
+
+    .danger {
+      border-left: 6px solid var(--red);
+      background: #fef2f2;
+    }
+
+    .step {
+      display: grid;
+      grid-template-columns: 46px 1fr;
+      gap: 16px;
+      margin: 18px 0;
+      align-items: start;
+    }
+
+    .num {
+      width: 42px;
+      height: 42px;
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      background: var(--brand);
+      color: white;
+      font-weight: 800;
+    }
+
+    .step-content {
+      border-bottom: 1px solid var(--line);
+      padding-bottom: 16px;
+    }
+
+    .step:last-child .step-content {
+      border-bottom: none;
+    }
+
+    .callout {
+      padding: 16px 18px;
+      border-radius: 14px;
+      margin: 16px 0;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 16px 0;
+      overflow: hidden;
+      border-radius: 12px;
+    }
+
+    th,
+    td {
+      border: 1px solid var(--line);
+      padding: 12px;
+      text-align: left;
+      vertical-align: top;
+    }
+
+    th {
+      background: #f3f4f6;
+    }
+
+    a {
+      color: var(--brand-dark);
+      font-weight: 700;
+    }
+
+    footer {
+      text-align: center;
+      color: var(--muted);
+      padding: 32px 24px;
+    }
+
+    .small {
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="container">
+      <span class="badge">Cours DevOps / Observabilité</span>
+      <h1>Sentry + GitHub Issues avec Python Flask</h1>
+      <p>
+        Support pas à pas pour expliquer à des élèves comment connecter une application Python à Sentry,
+        provoquer une erreur volontaire, puis transformer cette erreur en ticket GitHub.
+      </p>
+    </div>
+  </header>
+
+  <nav>
+    <div class="container">
+      <a href="#objectif">Objectif</a>
+      <a href="#architecture">Architecture</a>
+      <a href="#github-app">GitHub App Sentry</a>
+      <a href="#repo">Dépôt GitHub</a>
+      <a href="#code">Code Python</a>
+      <a href="#env">Variables</a>
+      <a href="#test">Test erreur</a>
+      <a href="#issues">Issues</a>
+      <a href="#discours">À dire aux élèves</a>
+    </div>
+  </nav>
+
+  <main>
+    <section id="objectif">
+      <h2>1. Objectif du cours</h2>
+      <p>
+        Le but est de montrer un vrai workflow professionnel :
+      </p>
+      <ol>
+        <li>Une application Flask tourne en local.</li>
+        <li>Une route provoque volontairement une erreur.</li>
+        <li>Sentry capture cette erreur avec la stack trace.</li>
+        <li>Depuis Sentry, on crée ou on lie une GitHub Issue.</li>
+        <li>GitHub devient l’endroit où l’équipe suit la correction.</li>
+      </ol>
+
+      <div class="callout success">
+        <strong>Message clé :</strong> Sentry sert à détecter et diagnostiquer l’erreur.
+        GitHub Issues sert à organiser le travail de correction.
+      </div>
+    </section>
+
+    <section id="architecture">
+      <h2>2. Architecture expliquée simplement</h2>
+      <div class="grid">
+        <div class="box">
+          <h3>Application Python</h3>
+          <p>
+            L’application Flask contient les routes API et la route de test <code>/debug-sentry</code>.
+          </p>
+        </div>
+        <div class="box">
+          <h3>Sentry</h3>
+          <p>
+            Sentry reçoit les exceptions, affiche la stack trace, l’environnement et la version de l’application.
+          </p>
+        </div>
+        <div class="box">
+          <h3>GitHub Issues</h3>
+          <p>
+            GitHub reçoit le ticket de suivi pour que l’équipe puisse corriger et documenter le problème.
+          </p>
+        </div>
+      </div>
+
+      <pre><code>Flask /debug-sentry
+        ↓
+Exception Python
+        ↓
+Sentry capture l'erreur
+        ↓
+Create GitHub Issue
+        ↓
+Ticket dans nhoss6/Python-sentry</code></pre>
+    </section>
+
+    <section id="github-app">
+      <h2>3. Connexion GitHub App Sentry</h2>
+
+      <div class="step">
+        <div class="num">1</div>
+        <div class="step-content">
+          <h3>Ouvrir les réglages GitHub de l’application Sentry</h3>
+          <p>
+            Aller sur :
+            <a href="https://github.com/settings/installations/142130303">Configuration GitHub App Sentry</a>
+          </p>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="num">2</div>
+        <div class="step-content">
+          <h3>Valider le mode sécurisé GitHub</h3>
+          <p>
+            GitHub peut afficher <code>Confirm access</code>. Dans ce cas, valider avec GitHub Mobile
+            ou avec le mot de passe. Cette étape protège les permissions sensibles.
+          </p>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="num">3</div>
+        <div class="step-content">
+          <h3>Limiter les dépôts accessibles</h3>
+          <p>
+            Dans <code>Repository access</code>, choisir <code>Only select repositories</code>.
+          </p>
+          <p>
+            Sélectionner uniquement :
+          </p>
+          <ul>
+            <li><code>nhoss6/Python-Avanc-e-</code></li>
+            <li><code>nhoss6/Python-sentry</code></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="num">4</div>
+        <div class="step-content">
+          <h3>Sauvegarder</h3>
+          <p>
+            Cliquer sur <code>Save</code> si le bouton est actif.
+            Si le bouton est grisé, cela signifie que GitHub a déjà enregistré la configuration.
+          </p>
+        </div>
+      </div>
+
+      <div class="callout warning">
+        <strong>Bonne pratique :</strong> ne jamais donner à Sentry accès à tous les dépôts si un seul dépôt suffit.
+        On limite les permissions au strict nécessaire.
+      </div>
+    </section>
+
+    <section id="repo">
+      <h2>4. Dépôt GitHub utilisé pour la démonstration</h2>
+      <p>
+        Le dépôt final utilisé pour la démo est :
+      </p>
+      <p>
+        <a href="https://github.com/nhoss6/Python-sentry">https://github.com/nhoss6/Python-sentry</a>
+      </p>
+
+      <table>
+        <thead>
+          <tr>
+            <th>Élément</th>
+            <th>Rôle</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><code>app.py</code></td>
+            <td>Application Flask avec Sentry et route <code>/debug-sentry</code>.</td>
+          </tr>
+          <tr>
+            <td><code>sentry_demo.py</code></td>
+            <td>Script autonome pour provoquer une erreur et l’envoyer à Sentry.</td>
+          </tr>
+          <tr>
+            <td><code>.env.example</code></td>
+            <td>Exemple de configuration sans secret.</td>
+          </tr>
+          <tr>
+            <td><code>.gitignore</code></td>
+            <td>Empêche de commiter <code>.env</code>, <code>.venv</code> et les caches Python.</td>
+          </tr>
+          <tr>
+            <td><code>.github/ISSUE_TEMPLATE/bug_sentry.md</code></td>
+            <td>Template d’issue pour documenter les erreurs Sentry.</td>
+          </tr>
+          <tr>
+            <td><code>requirements.txt</code></td>
+            <td>Dépendances Python nécessaires au projet.</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section id="code">
+      <h2>5. Code Python : initialiser Sentry proprement</h2>
+      <p>
+        Dans <code>app.py</code>, Sentry est initialisé uniquement si <code>SENTRY_DSN</code> existe.
+      </p>
+
+      <pre><code>load_dotenv()
+
+sentry_dsn = os.getenv("SENTRY_DSN")
+if sentry_dsn:
+    sentry_sdk.init(
+        dsn=sentry_dsn,
+        integrations=[FlaskIntegration()],
+        environment=os.getenv("ENVIRONMENT", "development"),
+        release=os.getenv("APP_RELEASE", "api-python-mysql-swagger@1.0.0"),
+        send_default_pii=False,
+        traces_sample_rate=float(os.getenv("SENTRY_TRACES_SAMPLE_RATE", "0.0")),
+    )</code></pre>
+
+      <div class="callout danger">
+        <strong>À ne pas faire :</strong> ne jamais écrire le DSN Sentry directement dans le code source.
+        Même si le dépôt est privé, un secret ne doit pas être versionné.
+      </div>
+
+      <h3>Route de test</h3>
+      <p>
+        La route <code>/debug-sentry</code> provoque une erreur volontaire.
+      </p>
+
+      <pre><code>@app.route("/debug-sentry")
+def trigger_error():
+    if os.getenv("ENVIRONMENT", "development") != "development":
+        return {
+            "error": "Route de demonstration desactivee hors environnement development"
+        }, 403
+
+    raise RuntimeError("Erreur volontaire pour demonstration Sentry + GitHub Issues")</code></pre>
+    </section>
+
+    <section id="env">
+      <h2>6. Configuration locale avec .env</h2>
+      <p>
+        Le fichier <code>.env.example</code> sert de modèle :
+      </p>
+
+      <pre><code>SENTRY_DSN=
+ENVIRONMENT=development
+APP_RELEASE=api-python-mysql-swagger@1.0.0
+SENTRY_TRACES_SAMPLE_RATE=0.0</code></pre>
+
+      <p>
+        Chaque élève copie ce fichier en <code>.env</code> puis ajoute son DSN localement :
+      </p>
+
+      <pre><code>copy .env.example .env</code></pre>
+
+      <div class="callout warning">
+        <strong>Attention :</strong> dans le cours, ne jamais projeter le vrai DSN Sentry.
+        Le montrer comme <code>votre_dsn_sentry</code> suffit.
+      </div>
+    </section>
+
+    <section id="installation">
+      <h2>7. Installation du projet</h2>
+
+      <h3>Créer l’environnement virtuel</h3>
+      <pre><code>python -m venv .venv</code></pre>
+
+      <h3>Activer l’environnement sous PowerShell</h3>
+      <pre><code>.venv\Scripts\Activate.ps1</code></pre>
+
+      <h3>Installer les dépendances</h3>
+      <pre><code>pip install -r requirements.txt</code></pre>
+
+      <h3>Lancer Flask</h3>
+      <pre><code>python app.py</code></pre>
+    </section>
+
+    <section id="test">
+      <h2>8. Tester l’erreur volontaire</h2>
+      <p>
+        Une fois le serveur lancé, ouvrir :
+      </p>
+
+      <pre><code>http://127.0.0.1:5000/debug-sentry</code></pre>
+
+      <p>
+        Résultat attendu côté navigateur :
+      </p>
+      <ul>
+        <li>une erreur <code>500</code> ;</li>
+        <li>une exception <code>RuntimeError</code> ;</li>
+        <li>un message indiquant que l’erreur est volontaire.</li>
+      </ul>
+
+      <p>
+        Résultat attendu côté Sentry :
+      </p>
+      <ul>
+        <li>un nouvel événement apparaît ;</li>
+        <li>la stack trace montre <code>trigger_error</code> ;</li>
+        <li>l’environnement est <code>development</code> ;</li>
+        <li>la release est <code>api-python-mysql-swagger@1.0.0</code>.</li>
+      </ul>
+    </section>
+
+    <section id="issues">
+      <h2>9. GitHub Issues créées dans le dépôt</h2>
+      <p>
+        Trois issues pédagogiques ont été créées dans le dépôt :
+      </p>
+
+      <ol>
+        <li>
+          <a href="https://github.com/nhoss6/Python-sentry/issues/1">
+            Issue #1 - Connecter le projet Flask à Sentry
+          </a>
+        </li>
+        <li>
+          <a href="https://github.com/nhoss6/Python-sentry/issues/2">
+            Issue #2 - Provoquer une erreur volontaire avec /debug-sentry
+          </a>
+        </li>
+        <li>
+          <a href="https://github.com/nhoss6/Python-sentry/issues/3">
+            Issue #3 - Créer une GitHub Issue depuis un événement Sentry
+          </a>
+        </li>
+      </ol>
+
+      <h3>Créer une issue depuis Sentry</h3>
+      <ol>
+        <li>Ouvrir l’événement dans Sentry.</li>
+        <li>Cliquer sur <code>Create GitHub Issue</code>.</li>
+        <li>Choisir le dépôt <code>nhoss6/Python-sentry</code>.</li>
+        <li>Remplir le titre et la description.</li>
+        <li>Créer l’issue.</li>
+        <li>Vérifier que Sentry affiche le lien vers GitHub.</li>
+      </ol>
+    </section>
+
+    <section id="discours">
+      <h2>10. Script d’explication pour les élèves</h2>
+
+      <div class="box">
+        <h3>Phrase d’introduction</h3>
+        <p>
+          “Aujourd’hui, on ne va pas seulement voir une erreur dans le terminal.
+          On va mettre en place un vrai circuit professionnel : l’erreur part de l’application,
+          arrive dans Sentry, puis devient une GitHub Issue.”
+        </p>
+      </div>
+
+      <div class="box">
+        <h3>Phrase sécurité</h3>
+        <p>
+          “Un DSN Sentry est une information sensible. On ne l’écrit jamais dans le code.
+          On utilise une variable d’environnement, ici <code>SENTRY_DSN</code>.”
+        </p>
+      </div>
+
+      <div class="box">
+        <h3>Phrase DevOps</h3>
+        <p>
+          “Le but de l’observabilité n’est pas seulement de voir qu’une erreur existe.
+          Le but est de réduire le temps entre la détection, la compréhension et la correction.”
+        </p>
+      </div>
+
+      <div class="box">
+        <h3>Phrase de conclusion</h3>
+        <p>
+          “Sentry répond à la question : qu’est-ce qui a cassé ?
+          GitHub Issues répond à la question : qui corrige, quand, et comment suit-on le travail ?”
+        </p>
+      </div>
+    </section>
+
+    <section id="recap">
+      <h2>11. Récapitulatif final</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Étape</th>
+            <th>Résultat</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>GitHub App Sentry</td>
+            <td>Accès limité aux dépôts nécessaires.</td>
+          </tr>
+          <tr>
+            <td>Dépôt GitHub</td>
+            <td><code>nhoss6/Python-sentry</code> contient le code de démo.</td>
+          </tr>
+          <tr>
+            <td>Sécurité</td>
+            <td>Aucun DSN réel dans le code source.</td>
+          </tr>
+          <tr>
+            <td>Test</td>
+            <td><code>/debug-sentry</code> provoque une erreur volontaire.</td>
+          </tr>
+          <tr>
+            <td>Sentry</td>
+            <td>Capture l’erreur et affiche le diagnostic.</td>
+          </tr>
+          <tr>
+            <td>GitHub Issues</td>
+            <td>Permet de suivre la correction avec l’équipe.</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+  </main>
+
+  <footer>
+    Support généré pour le cours Python / DevOps - Sentry + GitHub Issues.
+  </footer>
+</body>
+</html>
