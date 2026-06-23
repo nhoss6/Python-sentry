@@ -280,6 +280,7 @@
       <a href="#env">Variables</a>
       <a href="#test">Test erreur</a>
       <a href="#issues">Issues</a>
+      <a href="#chemins">Chemins</a>
       <a href="#discours">À dire aux élèves</a>
     </div>
   </nav>
@@ -583,8 +584,139 @@ SENTRY_TRACES_SAMPLE_RATE=0.0</code></pre>
       </ol>
     </section>
 
+    <section id="chemins">
+      <h2>10. Chemins et liens utilisés pendant la démonstration</h2>
+
+      <p>
+        Cette partie permet aux élèves de comprendre où se trouvent les fichiers localement,
+        où est le dépôt GitHub, et quelles pages ouvrir pendant la démonstration.
+      </p>
+
+      <h3>Chemins locaux Windows</h3>
+      <table>
+        <thead>
+          <tr>
+            <th>Élément</th>
+            <th>Chemin</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Projet Flask initial</td>
+            <td><code>C:\Users\moham\OneDrive\Desktop\MD Consulting\Formateur\Python\Jour 1\Code\api_python_mysql_swagger\api_python_mysql_swagger</code></td>
+          </tr>
+          <tr>
+            <td>Dépôt local GitHub <code>Python-sentry</code></td>
+            <td><code>C:\Users\moham\OneDrive\Desktop\Qadow\app\Python-sentry-worktree</code></td>
+          </tr>
+          <tr>
+            <td>Application Flask principale</td>
+            <td><code>C:\Users\moham\OneDrive\Desktop\Qadow\app\Python-sentry-worktree\app.py</code></td>
+          </tr>
+          <tr>
+            <td>Script autonome Sentry</td>
+            <td><code>C:\Users\moham\OneDrive\Desktop\Qadow\app\Python-sentry-worktree\sentry_demo.py</code></td>
+          </tr>
+          <tr>
+            <td>Exemple de variables d’environnement</td>
+            <td><code>C:\Users\moham\OneDrive\Desktop\Qadow\app\Python-sentry-worktree\.env.example</code></td>
+          </tr>
+          <tr>
+            <td>Fichier secret local à créer soi-même</td>
+            <td><code>C:\Users\moham\OneDrive\Desktop\Qadow\app\Python-sentry-worktree\.env</code></td>
+          </tr>
+          <tr>
+            <td>Template GitHub Issue</td>
+            <td><code>C:\Users\moham\OneDrive\Desktop\Qadow\app\Python-sentry-worktree\.github\ISSUE_TEMPLATE\bug_sentry.md</code></td>
+          </tr>
+          <tr>
+            <td>Ce support HTML</td>
+            <td><code>C:\Users\moham\OneDrive\Desktop\Qadow\app\Python-sentry-worktree\cours_sentry_github_pas_a_pas.html</code></td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h3>Liens GitHub</h3>
+      <table>
+        <thead>
+          <tr>
+            <th>Élément</th>
+            <th>Lien</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Dépôt principal de la démo</td>
+            <td><a href="https://github.com/nhoss6/Python-sentry">https://github.com/nhoss6/Python-sentry</a></td>
+          </tr>
+          <tr>
+            <td>Fichier HTML sur GitHub</td>
+            <td><a href="https://github.com/nhoss6/Python-sentry/blob/main/cours_sentry_github_pas_a_pas.html">https://github.com/nhoss6/Python-sentry/blob/main/cours_sentry_github_pas_a_pas.html</a></td>
+          </tr>
+          <tr>
+            <td>Issues du dépôt</td>
+            <td><a href="https://github.com/nhoss6/Python-sentry/issues">https://github.com/nhoss6/Python-sentry/issues</a></td>
+          </tr>
+          <tr>
+            <td>Configuration GitHub App Sentry</td>
+            <td><a href="https://github.com/settings/installations/142130303">https://github.com/settings/installations/142130303</a></td>
+          </tr>
+          <tr>
+            <td>Ancien dépôt de cours aussi autorisé</td>
+            <td><a href="https://github.com/nhoss6/Python-Avanc-e-">https://github.com/nhoss6/Python-Avanc-e-</a></td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h3>Liens locaux à ouvrir pendant le test</h3>
+      <table>
+        <thead>
+          <tr>
+            <th>Page</th>
+            <th>URL</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Swagger</td>
+            <td><code>http://127.0.0.1:5000/swagger</code></td>
+          </tr>
+          <tr>
+            <td>Route d’erreur volontaire</td>
+            <td><code>http://127.0.0.1:5000/debug-sentry</code></td>
+          </tr>
+          <tr>
+            <td>phpMyAdmin si MySQL est utilisé</td>
+            <td><code>http://localhost/phpmyadmin</code></td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h3>Commandes à lancer depuis le bon dossier</h3>
+      <p>
+        Avant de lancer les commandes, se placer dans le dossier du dépôt :
+      </p>
+
+      <pre><code>cd "C:\Users\moham\OneDrive\Desktop\Qadow\app\Python-sentry-worktree"</code></pre>
+
+      <p>
+        Puis lancer :
+      </p>
+
+      <pre><code>python -m venv .venv
+.venv\Scripts\Activate.ps1
+pip install -r requirements.txt
+copy .env.example .env
+python app.py</code></pre>
+
+      <div class="callout warning">
+        <strong>Important :</strong> le fichier <code>.env</code> reste uniquement sur la machine locale.
+        Il ne doit pas être envoyé sur GitHub.
+      </div>
+    </section>
+
     <section id="discours">
-      <h2>10. Script d’explication pour les élèves</h2>
+      <h2>11. Script d’explication pour les élèves</h2>
 
       <div class="box">
         <h3>Phrase d’introduction</h3>
@@ -621,7 +753,7 @@ SENTRY_TRACES_SAMPLE_RATE=0.0</code></pre>
     </section>
 
     <section id="recap">
-      <h2>11. Récapitulatif final</h2>
+      <h2>12. Récapitulatif final</h2>
       <table>
         <thead>
           <tr>
